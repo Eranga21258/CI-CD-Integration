@@ -58,9 +58,9 @@ pipeline {
         }
         stage('Login to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'CICD-Integration-Password', variable: 'CICD Integration')]) {
+                withCredentials([string(credentialsId: 'CICD-Integration-Password', variable: 'CICD_Integration')]) {
                     script {
-                        bat "docker login -u kubeeranga118 -p %CICD Integration#%"
+                        bat 'docker login -u kubeeranga118 -p %CICD_Integration#%'
                     }
                 }
             }
