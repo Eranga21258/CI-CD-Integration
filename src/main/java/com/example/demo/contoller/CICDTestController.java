@@ -19,7 +19,7 @@ public class CICDTestController {
         log.debug("Start to CI/CD test");
         ResponseBean responseBean = new ResponseBean();
         responseBean.setResponse(MessageVarList.RSP_SUCCESS);
-        responseBean.setContent("CI/CD fully Success");
+        responseBean.setContent("HI...");
         log.debug("CI/CD test success");
         return responseBean;
     }
