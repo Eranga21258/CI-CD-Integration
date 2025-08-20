@@ -16,28 +16,26 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                script {
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                }
+                bat "docker stop %CONTAINER_NAME% || exit 0"
+                bat "docker rm %CONTAINER_NAME% || exit 0"
             }
         }
 
         stage('Run New Container') {
             steps {
-                sh "docker run -d --name ${CONTAINER_NAME} -p 8881:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                bat "docker run -d --name %CONTAINER_NAME% -p 8881:8080 %DOCKER_IMAGE%:%DOCKER_TAG%"
             }
         }
     }
