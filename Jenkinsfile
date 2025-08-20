@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "kubeeranga118/cicd-integration"
+        CONTAINER_NAME = "cicd-container"
+    }
+
     stages {
         stage('SCM Checkout') {
             steps {
@@ -9,9 +14,10 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t kubeeranga118/cicd-integration:%BUILD_NUMBER% .'
+                bat "docker build -t %IMAGE_NAME%:%BUILD_NUMBER% ."
             }
         }
 
@@ -25,10 +31,26 @@ pipeline {
 
         stage('Push Image') {
             steps {
-                bat 'docker push kubeeranga118/cicd-integration:%BUILD_NUMBER%'
+                bat "docker push %IMAGE_NAME%:%BUILD_NUMBER%"
+            }
+        }
+
+        stage('Stop & Remove Old Container') {
+            steps {
+                bat """
+                docker stop %CONTAINER_NAME% || echo Container not running
+                docker rm %CONTAINER_NAME% || echo Container not found
+                """
+            }
+        }
+
+        stage('Run New Container') {
+            steps {
+                bat "docker run -d -p 8881:8881 --name %CONTAINER_NAME% %IMAGE_NAME%:%BUILD_NUMBER%"
             }
         }
     }
+
     post {
         always {
             bat 'docker logout'
