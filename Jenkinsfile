@@ -53,7 +53,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t Eranga Tennakoon/cicd-integration:%BUILD_NUMBER% .'
+                bat 'docker build -t kubeeranga118/cicd-integration:%BUILD_NUMBER% .'
             }
         }
         stage('Login to Docker Hub') {
