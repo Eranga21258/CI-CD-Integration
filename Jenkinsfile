@@ -60,14 +60,14 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'CICD-Integration-Password', variable: 'CICD Integration')]) {
                     script {
-                        bat "docker login -u Eranga Tennakoon -p %CICD Integration#%"
+                        bat "docker login -u kubeeranga118 -p %CICD Integration#%"
                     }
                 }
             }
         }
         stage('Push Image') {
             steps {
-                bat 'docker push Eranga Tennakoon/cicd-integration:%BUILD_NUMBER%'
+                bat 'docker push kubeeranga118/cicd-integration:%BUILD_NUMBER%'
             }
         }
     }
