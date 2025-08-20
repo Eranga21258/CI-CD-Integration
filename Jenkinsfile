@@ -9,9 +9,16 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
+                cleanWs()
                 retry(3) {
                     git branch: 'main', url: 'https://github.com/Eranga21258/CI-CD-Integration'
                 }
+            }
+        }
+
+        stage('Build Jar') {
+            steps {
+                bat 'mvn clean package -DskipTests'
             }
         }
 
@@ -37,10 +44,8 @@ pipeline {
 
         stage('Stop & Remove Old Container') {
             steps {
-                bat """
-                docker stop %CONTAINER_NAME% || echo Container not running
-                docker rm %CONTAINER_NAME% || echo Container not found
-                """
+                bat 'docker stop %CONTAINER_NAME% || echo Container not running'
+                bat 'docker rm %CONTAINER_NAME% || echo Container not found'
             }
         }
 
