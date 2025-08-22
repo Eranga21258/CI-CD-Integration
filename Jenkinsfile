@@ -21,7 +21,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
                     bat "docker build -t kubeeranga118/devops-integration ."
                 }
             }
@@ -31,12 +30,22 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'DOCKER_HUB_PWD')]) {
-                        // Login to Docker Hub
                         bat "docker login -u kubeeranga118 -p %DOCKER_HUB_PWD%"
-
-                        // Push the image directly
                         bat "docker push kubeeranga118/devops-integration"
                     }
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                script {
+                    // Stop old container if running
+                    bat "docker stop devops-container || exit 0"
+                    bat "docker rm devops-container || exit 0"
+
+                    // Run new container
+                    bat "docker run -d -p 8881:8881 --name devops-container kubeeranga118/devops-integration"
                 }
             }
         }
