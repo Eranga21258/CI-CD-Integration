@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 21258era#met
+      MYSQL_DATABASE: airline_booking
+    ports:
+      - "3306:3306"
+
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8881:8881"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/airline_booking?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 21258era#met
