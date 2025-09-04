@@ -2,16 +2,24 @@ version: "3.8"
 services:
   db:
     image: mysql:8
+    container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: 21258era#met
       MYSQL_DATABASE: airline_booking
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build: .
+    container_name: cicd_app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8881:8881"
     environment:
